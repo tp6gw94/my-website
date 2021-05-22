@@ -1,11 +1,12 @@
-baseURL = "https://example.com"
+baseURL = "shengtai.me"
 languageCode = "zh-hant"
 defaultContentLanguage = "zh-hant"
-title = "Cupper"
+title = "Sheng Tai"
 theme = "cupper-hugo-theme"
 googleAnalytics = "UA-123456789-1"
-disqusShortname = "yourdiscussshortname"
+disqusShortname = "shengtai-me"
 enableGitInfo = true
+enableEmoji= true
 
 [taxonomies]
 tag = "tags"
@@ -17,8 +18,8 @@ post = "/:filename/"
 quality = 99
 
 [params]
-description = "An accessibility-friendly Hugo theme, ported from the [original Cupper](https://github.com/ThePacielloGroup/cupper) project."
-homeMetaContent = "An accessibility-friendly Hugo theme, ported from the original Cupper project."
+description = "陳昇泰<br>一名前端工程師，討厭加班。"
+homeMetaContent = "created by hugo, blog project.你好，我是昇泰，一名網頁開發工程師。"
 footer = "Made with [Hugo](https://gohugo.io/). Themed by [Cupper](https://github.com/zwbetz-gh/cupper-hugo-theme). Deployed to [Netlify](https://www.netlify.com/)."
 dateFormat = "Jan 2, 2006"
 codePenUser = "someUser"
@@ -28,8 +29,8 @@ search = true
 showThemeSwitcher = true
 moveFooterToHeader = false
 logoAlt = "An alternative text description of the logo"
-customCss = [ "css/custom_01.css", "css/custom_02.css" ]
-customJs = [ "js/custom_01.js", "js/custom_02.js" ]
+customCss = [  ]
+customJs = [  ]
 
 [[menu.nav]]
 name = "Home"
@@ -52,9 +53,14 @@ url = "/about/"
 weight = 4
 
 [[menu.nav]]
+name = "E-mail"
+url = "mailto:tp6gw94@gmail.com"
+weight = 5
+
+[[menu.nav]]
 name = "RSS"
 url = "/index.xml"
-weight = 5
+weight = 6
 
 [markup]
 defaultMarkdownHandler = "goldmark"
