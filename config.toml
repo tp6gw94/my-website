@@ -53,14 +53,9 @@ url = "/about/"
 weight = 4
 
 [[menu.nav]]
-name = "E-mail"
-url = "mailto:tp6gw94@gmail.com"
-weight = 5
-
-[[menu.nav]]
 name = "RSS"
 url = "/index.xml"
-weight = 6
+weight = 5
 
 [markup]
 defaultMarkdownHandler = "goldmark"
