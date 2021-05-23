@@ -137,7 +137,9 @@ https://client.example.com/callback
     &state=xyz
 ````
 
-> :exclamation: access token 會是公開的
+{{<warning>}}
+access token 會是公開的
+{{</warning>}}
 
 #### Client Credentials Flow
 
@@ -173,7 +175,9 @@ Content-Type: application/json
 
 > 主要用於 legacy application，使用帳號與密碼進行登入
 
-> :exclamation: 除了較舊的系統，其它沒有理由使用這個 flow，username, password 造成了許多安全性的問題
+{{<warning>}}
+除了較舊的系統，其它沒有理由使用這個 flow，username, password 造成了許多安全性的問題
+{{</warning>}}
 
 ##### Token request
 
