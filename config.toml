@@ -31,6 +31,7 @@ moveFooterToHeader = false
 logoAlt = "An alternative text description of the logo"
 customCss = [  ]
 customJs = [  ]
+stackblitzUser= "tp6gw94"
 
 [[menu.nav]]
 name = "Home"

@@ -37,9 +37,6 @@
     {{ end }}
     
     {{ if ne .Params.toc false }}
-      <div class="h2-container">
-        <h2 id="table-of-content">Table of Contents</h2>
-      </div>
       {{ partial "toc" . }}
     {{ end }}
 
