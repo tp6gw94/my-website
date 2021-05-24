@@ -29,9 +29,10 @@ search = true
 showThemeSwitcher = true
 moveFooterToHeader = false
 logoAlt = "An alternative text description of the logo"
-customCss = [  ]
+customCss = [ 'css/custom.css' ]
 customJs = [  ]
 stackblitzUser= "tp6gw94"
+codeSandbox="tp6gw94"
 
 [[menu.nav]]
 name = "Home"

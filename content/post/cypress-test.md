@@ -119,8 +119,6 @@ cy.wait('@getUsers');
 - 可以自行控制 response 的內容( body, status, header, delay...)
 - 容易測試請求 API 回傳 json 的形式
 
-:heavy_exclamation_mark: 對於 server 將不會測試到
-
 ```javascript
 // before cypress 6.0.0
 cy.server()
@@ -138,11 +136,9 @@ cy.intercept('https://localhost:8888/user?email=john@gmail.com', [
 ])
 ```
 
-### Recommend
-
-- 多數時候使用 stubbed response test 更快且容易
-- stubbed response 不適用於 ssr 的架構上
-- 避免使用 stub 在重要的操作流程上 (登入之類的)
+{{<note>}}
+  大多數的時候 test 會使用 sutbbed response 進行測試，但 stubbed reponse 並不適用於 SSR 的架構上，且在核心的系統上 (例如登入) 也較不合適
+{{</note>}}
 
 ## Screenshots
 

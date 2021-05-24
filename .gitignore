@@ -1,3 +1,5 @@
+# ignore all . files but include . folders
+.*
+
+
 public/
-.idea
-\.DS_Store
