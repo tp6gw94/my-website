@@ -30,7 +30,7 @@ showThemeSwitcher = true
 moveFooterToHeader = false
 logoAlt = "An alternative text description of the logo"
 customCss = [ 'css/custom.css' ]
-customJs = [  ]
+customJs = [ 'https://cdn.jsdelivr.net/npm/pangu@4.0.7/dist/browser/pangu.min.js', 'js/custom.js' ]
 stackblitzUser= "tp6gw94"
 codeSandbox="tp6gw94"
 
