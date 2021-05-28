@@ -19,7 +19,7 @@ cypress
 │   └── my_first_spec.js
 ├── plugins                 # cypress plugin
 │   └── index.js            
-└── support                 # reuseable code, utiles function
+└── support                 # reuseable code, utils function
     └── index.js
 
 ```
@@ -35,7 +35,7 @@ cypress 提供許多便利的 command，也可以透過既有的 command 自訂 
 :heavy_check_mark:
 
 - `cy.visit(url)` visit url
-- `cy.get(dom)` get dom element use query string`
+- `cy.get(dom)` get dom element use query string
 - `cy.request(url, option)` send request(post, get, delete...)
 
 :x:
@@ -84,7 +84,7 @@ cy.postData()
 
 ## Assertion
 
-cypress 也提供斷言的feature，對於元素的斷言通常是使用 **.should** 進行斷言，例如 
+cypress 也提供斷言的 feature，對於元素的斷言通常是使用 **.should** 進行斷言，例如 
 - `cy.get('form').find('input').should('not.have.class', 'disabled')` 
 - `cy.get('#user-name').should('have.text', 'Joe Smith')`
 
@@ -157,7 +157,7 @@ cy.intercept('https://localhost:8888/user?email=john@gmail.com', {
 ```
 
 {{<note>}}
-  大多數的時候 test 會使用 sutbbed response 進行測試，但 stubbed reponse 並不適用於 SSR 的架構上，且在核心的系統上 (例如登入) 也較不合適
+  多數時候為了將測試的關注點聚焦在想要測試的地方，避免因為其他的因素導致測試有其他的問題，大多會使用 stubbed response。
 {{</note>}}
 
 ## 網頁的狀態 (Cookie & Local Storage)
@@ -225,6 +225,10 @@ cy.screenshot('') // 若未給參數會自動儲存在 screenshots 的資料夾�
   "video": false
 }
 ```
+
+## 其它
+
+- cypress 官網建議將要選取的元素使用 `data-cy` 的 attribute 進行 select
 
 ## 實作的小紀錄
 
