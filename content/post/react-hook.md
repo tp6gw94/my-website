@@ -1,7 +1,6 @@
 ---
 title: "React Hook"
 date: 2021-05-23T12:18:52+08:00
-draft: true
 toc: true
 ---
 
@@ -244,3 +243,103 @@ demo
 {{<codeSandbox tp6gw94-react-hook-usememo-mrjjr>}}
 
 可以看到每次更新 `status` 時，都會非常的迅速，因為 `fib` 並未偵測到 `count` 的改變。
+
+## useCallback
+
+`useCallback` 顧名思義就是回傳 callback 的 function 與 `useMemo` 2 者皆是為了提生效能的 hook，皆是在 dependency 發生改變時，才會進行重新的計算。
+
+`useCallback` 通常會與 `memo` 一起使用，`memo` 會將 component 的 props 進行淺比較，若不相同才會進行更新。
+
+demo
+{{<codeSandbox react-hook-usecallback-qhvrb>}}
+
+當父元素進行更新時，`memo` 確認 props 是否有變更，決定是否進行刷新元件。
+
+`useCallback` 依據 dependency 決定是否回傳新的 function。
+
+{{<note>}}
+useMemo 與 useCallback 都是提升效能的 hook，但是否需要用到它需要思考一下，若計算不昂貴仍使用的話，反而會造成效能的降低與可讀性變差，
+{{</note>}}
+
+## useLayoutEffect
+
+`useLayoutEffect` 常用在製作 animation 或一些 DOM 元素上面，它與 `useEffect` 用法相同，大多數時候其實只需要用到 `useEffect` 即可。
+
+`useLayoutEffect` 可以保證在內部的資料**同步**的進行更新，所以可能會造成畫面的阻塞，它等價於 `componentDidMount`。
+
+demo
+{{<codeSandbox tp6gw94-react-hook-uselayouteffect-f30e3>}}
+
+demo 中在 `useLayoutEffect` 中使用了昂貴的計算，畫面會呈現空白等待計算完畢才會顯示出 hi
+
+```javascript
+function lib(n) {
+  if (n <= 1) {
+    return 1;
+  }
+  return lib(n - 1) + lib(n - 2);
+}
+
+export default function App() {
+  const [text, setText] = useState("ih");
+
+  useLayoutEffect(() => {
+    lib(40);
+    setText("hi");
+  }, []);
+
+  return (
+    <div className="App">
+      <h1>{text} </h1>
+    </div>
+  );
+}
+```
+
+若是使用 `useEffect` 的話，畫面會先顯示出 ih，等待適當的時刻才會重新渲染畫面為 hi。
+
+```javascript
+function lib(n) {
+  if (n <= 1) {
+    return 1;
+  }
+  return lib(n - 1) + lib(n - 2);
+}
+
+export default function App() {
+  const [text, setText] = useState("ih");
+
+  useEffect(() => {
+    lib(40);
+    setText("hi");
+  }, []);
+
+  return (
+    <div className="App">
+      <h1>{text} </h1>
+    </div>
+  );
+}
+```
+
+## useImperativeHandle
+
+`useImperativeHandle` 主要是用在建立 library 或者 sdk，在一般的場景中幾乎不會用到這個 hook。
+
+`useRef` 會將 instance 的值回傳，所以我們可以直接控制 DOM 元素，而 `useImperativeHandle` 會回傳你定義它要回傳的屬性或是取代屬性。
+
+因為這個特性，它常用於若不想直接將元素的 properties 暴露出來給其他人使用或想要取代原生的行為時，才會使用這個 hook。
+
+{{<codeSandbox tp6gw94-react-hook-useimperativehandler-es0mu>}}
+
+當 blur input 時，可以看到 console 出現的 ref 只有 expose 出 blur 的 properties。
+
+## useDebugValue
+
+`useDebugValue` 與 `useImperativeHandle` 一樣比較常使用在 library 或 sdk，對於一般的應用場景較少使用。
+
+它的使用是告知 user 這個 custom hook 是在做什麼。
+
+{{<codeSandbox tp6gw94-react-hook-useimperativehandler-es0mu>}}
+
+打開 React DevTools 可以看見 App component 內有 `customHook` 的訊息。
