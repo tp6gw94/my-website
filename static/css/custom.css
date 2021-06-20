@@ -4,3 +4,13 @@
   color: #ec814d;
   padding: 0.2em 0.33em;
 }
+
+div.code-toolbar > .toolbar {
+  top: -2.5em !important;
+  right: .5em;
+  background: transparent;
+}
+
+div.code-toolbar > .toolbar a, div.code-toolbar > .toolbar button, div.code-toolbar > .toolbar span {
+  box-shadow: none;
+}
