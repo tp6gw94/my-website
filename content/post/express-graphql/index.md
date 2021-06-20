@@ -9,7 +9,7 @@ GraphQL 分為 client-side 與 server-side，此篇屬於 server-side 的部分�
 
 > 建立 GraphQL 的 Schema 有分 2 種方式，一是使用 Schema Definition Language (SDL)，是一種 GraphQL 定義 Schema 的語言。
 > 
-> 另一種是使用程式語言的方式建立 (JavaScript, Ruby...) Schema，express-graphql 就是使用 JavaScript 去定義 Schema，再轉成 GraphQL 可以理解的語言。
+> 另一種是使用程式語言的方式建立 (JavaScript, Ruby...) Schema，express-graphql 就是使用 JavaScript 去定義 Schema。
 
 ## GraphQL 的原因
 
