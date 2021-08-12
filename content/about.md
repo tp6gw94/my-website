@@ -3,7 +3,7 @@ title: "About"
 date: 2021-05-22T22:18:25+08:00
 ---
 
-## Self information
+## Self Information
 
 - 陳昇泰
 - 高雄人
@@ -12,7 +12,7 @@ date: 2021-05-22T22:18:25+08:00
 - 喜歡狗、看電影、美劇
 - 合作、跟隨者
 
-## Experience highlights
+## Experience Highlights
 
 - 高雄科技大學 ( 2015.09 - 2019.06 )
     - 105、106 帶動中小學活動副召
@@ -26,14 +26,17 @@ date: 2021-05-22T22:18:25+08:00
     - 建立內部自動化系統
 - 慶奇科技 ( 2021.04 -  )
     - 前端工程師
+    - 內部 Code Review
+    - 導入 Cypress & Storybook
 
 ## Skill
 
-- Html, CSS, JavaScript
+- HTML, CSS, JavaScript
+- GraphQL
 - React, Redux
 - Vue, Vuex
 - git
-- bootstrap, tailwind css
+- Bootstrap, TailwindCSS
 - SQL
 
 ## Link
