@@ -1,8 +1,282 @@
 ---
-title: "Typescript I"
+title: "Typescript"
 date: 2021-08-18T22:13:15+08:00
 toc: true
 ---
+
+## Intro
+
+TypeScript = JavaScript + Type
+
+目前廣泛使用，透過 compiler 編譯成 js file。
+
+Pros
+- build time check type
+- 相對 JS 提示友好
+
+Cons
+- 並不是真的 static type，仍然會有 runtime 的 type error
+- 定義 type 繁瑣
+- 推導方式不聰明
+
+## Basic
+
+基本的使用方式
+
+```typescript
+const num: number = 1;
+const isBool: boolean = false;
+const date: Date = new Date();
+const str: string = 'hello';
+const arr1: Array<string> = ['a','b'];
+const arr2: Array<number> = [1, 2, 3];
+const tuple: [number, boolean, string] = [1, false, 'hey'];
+const obj: {option?: string, readonly isReadOnly: boolean, tuple: [number, string]} = {isReadOnly: false, tuple: [1, 'a']};
+
+type Sum = (a: number, b: number) => number;
+const sum: Sum = (a, b,) => a+b;
+function sum2(a: number, b: number):number {
+    return a+b;
+}
+```
+
+[Playground Link](https://www.typescriptlang.org/play?#code/MYewdgzgLgBGCuBbAXHJAjApgJxgXhgEYBuAWAChRJYBLCAIRBABtV0nnMBDMfGAMy7MImMpXDQYAEy5RMqACKzMfMJgDuMJXIAUASjFVJ0bKhM0wAcz4ByABaZmzEDcMTYXbNkKoAgl64ATwAecysAPj4AbRsuGwAaG3QbAF03ahhPbAAmPwCQhEQsbEiCKMJ4mGzKgGY0iiNYKHgAB05UKMLiyvYWbjBKsMsU6IqBIRFK+0xA1PTJEHQAK1QAbxAWqBpwAH4zKGwLS0rsbilwZkCYOgAlM4B5MEu2Dn7K5rb5GE6MHEGDo4pAC+fFWtweT0CqEEwkw71a7W+Y1iqSBYgoUECLRUAGUkHwdFxUF0-jB0MTftg9PhIiTsPNYBAkKg8YgCVwevFqXhIlwANToMT8eBgYBbcAwJmIbKEilFUnktDyqnIOkwVYUGBamCnZrYXj8wUUIEUChSnQVbJ6IA)
+
+## Union Types & Intersection Types
+
+### Union Types
+
+Union Type 與 or 的概念相同，使用 `|` 來表示。
+
+```typescript
+const a: 'hello' | 'hey' = 'hello';
+```
+
+```typescript
+type Todo = {
+    userId: number;
+    id: number;
+    title: string;
+    completed: boolean
+}
+
+// 泛型 T 後續會介紹，有可能會回傳 data or error
+async function http<T>(request: RequestInfo): Promise<[true, T] | [false, Error]> {
+    const resp = await fetch(request);
+
+    if (!resp.ok) return [false, new Error('fetch error')];
+    
+    const data = await resp.json();
+    return [true, data];
+}
+
+http<Array<Todo>>('https://jsonplaceholder.typicode.com/todos').then(respData => {
+    // 有 2 個方式可以推導 type
+    
+    // Discriminated Unions
+    if (respData[0]) {
+        console.log(respData[1]) // type Todo[]
+    } else {
+        console.log(respData[1].message); // type Error
+    }
+
+    const [respStatus, dataOrError] = respData;
+    // Narrowing with type guards
+    if (dataOrError instanceof Error) {
+        console.log(dataOrError.message); // type Error
+    } else {
+        console.log(dataOrError); // type ToDo[]
+    }
+})
+```
+
+[Playground Link](https://www.typescriptlang.org/play?#code/C4TwDgpgBAKg9gEzlAvFA3gWAFBT1AVwGcIAnASQQC4oA7AgWwCMyBuHfKAS2rsZdLtc+YF2AAbCDSLBSXWgHMhnAMZwGYScAi8mcOJICGtHAF8cOQ0RC0VUAGYFbouLSgALYMDAAeGAD4AClIIAEcCCBkaACUwiJlyWns4AEoaAAVSdS4SHwBtWQiAGlgAXSgAHyg8+0NxEhKAUVIs0lL-DA58NVoZKBCiMFQoQwB3QzEHCGAVd2C4yOAUoS68LnsoQIBCAbAAOjgAaxT+6YJSNxq6hroIUahm1sCAcntp2agyVueU0uV8VZQHp9BCGYCGYZjCbAU6DPYAKyIrkCy0BIWA50uhQgJVB4L+Zgs2E83h8AEEWoYQH5EHB-EFniSwEQqAB6VmI1yaQwqCDuAwIMh7UBgLhqQV7NQMVnAWlEH7C9wQWjzQYAETBEJQHSwwjw7KgapyKjkDHkYJ0UAAqrQuK4iID1ptdhrwXkAAylE66ziqe0GCB7cRwBSqsCuwx5ACMXqgBpF0HgSDypUBpk+9WgPt9eGBAaDIbDEejpT2DEiREMCggyzjrKgCYeLTgpDTRL9vRheV2AGVwRiiLjNQB5UiPFvlNAuzX-fX1gByhmbo3kCigK+A7gb4GgCgIS4QDr13A2gTxhlH49I3E7xl5cA2V+9gI7SMkBdD58vzdIZYrVZrVg623SAm1aNMMxITpj1ffNg0-Ecxx-Wt4x3WA4DVOAUzbbBTBSIA)
+
+### Intersection Types
+
+Intersection Type 則是 and 使用 `&` 表示
+
+```typescript
+function dateRange(end:string, start: string): Date & {startDate: Date, endDate: Date} {
+    const date = new Date();
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+    return {...date, startDate, endDate}
+}
+
+dateRange('2021-01-01', '2020-01-01').startDate.getDate();
+dateRange('2021-01-01', '2020-01-01').endDate.getDate();
+
+```
+
+[Playground Link](https://www.typescriptlang.org/play?#code/GYVwdgxgLglg9mABAEwIZQKYCVVgOYYAUGYyAXAM5QBOM+ANIlatVGUzXXgJTsAi6DIgBkiAN7NWAzP0GMSyaRlmYAvuIBQibYggIqKQYgC8iMBgDuiJYW4BuLTr1gDkqEpNnL1wYTf3HbWcDBQ9TcysbBQCdRGoMKBBqJDEAOnS0TEY3JXlSJVUNQo1M7FwCQgByACYABmqARgBaWubWysYa+tqWtobK7lScwVSCd18A0px8Ii7G3t6OxDme1sXB0JGxmwCgA)
+
+## Type Aliases & Interface
+
+### Type Aliases
+
+可以替 Type 進行命名，使用 `type` keyword，可以使用 Union Types 與 Intersection Types
+
+```typescript
+type Demo = {
+    a: string;
+    b: boolean
+}
+type DemoWithUnion = number | {a: string};
+type DemoWIthInterscrion = number & {a: number};
+
+```
+[Playground Link](https://www.typescriptlang.org/play?#code/C4TwDgpgBAIhC2B7KBeKBvAUFHUCGAXFAM7ABOAlgHYDmA3NrgEZFOKIA2EeVmAvplCRYCRAHUKwABYBVKhURVUUKgFd4TCGSgAfDIRLlqNPgyHQ4SMQElp1qsC3EAxpUXK1GrVABk+op6aZKaYmEA)
+
+### Interface
+
+使用 `interface` keyword
+
+```typescript
+interface IAnim {
+  eat: () => void;
+  name: string;
+}
+
+class Anim implements IAnim {
+    name: string;
+    constructor(name: string) {
+        this.name = name;
+    }
+    eat() {
+        console.log('eat');
+    }
+}
+```
+[Playground Link](https://www.typescriptlang.org/play?#code/JYOwLgpgTgZghgYwgAgJIEETALbIN4BQyyEcYAXMgBQCUyAvAHzIBuA9sACYDcRyIcbBEoBnMFFABzXgF8CBBABs4Ikckw5kOAA6KIQ8GoxZchYsQFDR4qb3PIEbEGKgBXBGDZQql4chdSdGb25mAAFsAiAHS+DPyCEHbmcvakYLT4fCEOTiJselGKbJJUAORppTRJxHIyQA)
+
+
+也可以同時 implement 多個 interface
+
+```typescript
+interface IAnim {
+  eat: () => void;
+  name: string;
+}
+
+interface Demo {
+    xxx: () => void
+}
+
+class Anim implements IAnim, Demo {
+    name: string;
+    constructor(name: string) {
+        this.name = name;
+    }
+    eat() {
+        console.log('eat');
+    }
+
+    xxx() {
+        
+    }
+}
+```
+
+[Playground Link](https://www.typescriptlang.org/play?#code/JYOwLgpgTgZghgYwgAgJIEETALbIN4BQyyEcYAXMgBQCUyAvAHzIBuA9sACYDcRyIcbBEoBnMFFABzXgF8CBUJFiIUAEQjY2+PsQAe+yrQbN2XAnIIIANnBEjkmHMhwAHKxojh7GLNgA0yOqa2sTEAkKi4lK8ocgIbCBiUACuCGBsUFThwshJUnSEsbFgABbAIgB02Qz8ghAxoXKxpGBGhUXE8Yls7hVWbJJUAOQtQzQNxBax+rptOkXzcjJAA)
+
+interface 有另外一個特性稱爲 **open interface**，若同名的 interface，將會傳入新屬性至原 interface
+
+```typescript
+interface IAnim {
+  eat: () => void;
+  name: string;
+}
+
+class Anim implements IAnim {
+    name: string;
+    constructor(name: string) {
+        this.name = name;
+    }
+    eat() {
+        console.log('eat');
+    }
+
+    xxx() {
+
+    }
+}
+// 會將新屬性丟至 IAnim
+interface IAnim {
+    xxx: () => void
+}
+```
+[Playground Link](https://www.typescriptlang.org/play?ssl=22&ssc=2&pln=1&pc=1#code/JYOwLgpgTgZghgYwgAgJIEETALbIN4BQyyEcYAXMgBQCUyAvAHzIBuA9sACYDcRyIcbBEoBnMFFABzXgF8CBBABs4Ikckw5kOAA6KIQ8GoxZchYsQFDR4qb3PIEbEGKgBXBGDZQql4chdSdGb25mAAFsAiAHS+DPyCEHbmcvakYLT4fCEOTiJselGKbJJUAORppTRJxHJZyAAejRmEdXJyAPTtyIDA5oDgOoANpoA2OoDkBoD4coDPgWga2ASgkLCIKMaawcSN9ZQZTKwcnAQyQA)
+
+open interface 的特性主要是使用來修改 Global 的 interface
+
+```typescript
+interface Window {
+    newProperty: string
+}
+
+window.newProperty
+```
+[Playground Link](https://www.typescriptlang.org/play?ssl=5&ssc=19&pln=1&pc=1#code/JYOwLgpgTgZghgYwgAgOqgCYHsDuyDeAUMiciBDgApRYAO0YAngFzIDOYUoA5oQL6FCOTLgB05KjXpQmQA)
+
+### Which one to use ？
+
+二者其實差不多，在多數情況下都可以使用，不過還是有一些建議。
+
+1. 若是要定義類似 object 的 type 建議使用 type aliases，因爲可以使用 `|` 與 `&`
+2. 若要定義 type 供 `implements` 使用，建議使用 `interface`，就不會有可能會有 `number | {a: string}` 這種錯誤發生
+3. 若是建立第 3 方的 library，希望可以由使用者定義傳入哪寫 type，建議使用 interface，便於使用者修改它
+
+## Generics
+
+泛型，當有可能不是固定 type 時，可以使用泛型，告知 typescript 此次是使用什麼類型
+
+若沒有使用泛型，可能會像是這樣
+
+```typescript
+function listToDict(list: any[], idgen: (item: any) => string): {[key: string]: any} {
+    const dict: {[key: string]: any} = {};
+
+    list.forEach(item => {
+        const key = idgen(item);
+        dict[key] = item;
+    });
+
+    return dict;
+}
+
+const demo = [{name: 'Mike', userId: '01'}, {name: 'Todd', userId: '02'}];
+
+const userDict = listToDict(demo, (item) => item.userId);
+userDict.a.b.c.d;
+```
+
+[Playground Link](https://www.typescriptlang.org/play?#code/GYVwdgxgLglg9mABAGxgZygFTgERtAClQwC5EBDMATwG0BdAGkRgBMBzAUzDIJig4C2ZSlQCUiALwA+RBgBOMMG1FkA3jQDWHKmXmK2dYdQC+iVQChEVxBAQZELfFDWbtuqAqWGKJyWeMA3OaW1sRQAHTAcHIAouQQABa8-AKSMhbWmTZ2UIhaVH6snGDJgqJBWdaO0K5UdIUpFdbG5cGZchxQIHJI1VBBxsG2YPYsgnB+NKpg5AIcZADkALIwWgtMIGgccgCSLIsADACMC8ZM07PziAvYLCzriJvbe4cATKd0QebD9k9yeNA-GFsACoAQxgI4ExSgJxNJmClwn89q0-qDwuRwgAjcIQcIsAJAA)
+
+造成 runtime 的 error。
+
+使用泛型，告知正確的 type
+
+```typescript
+function listToDict<T>(list: T[], idgen: (item: T) => string): {[key: string]: T} {
+    const dict: {[key: string]: T} = {};
+
+    list.forEach(item => {
+        const key = idgen(item);
+        dict[key] = item;
+    });
+
+    return dict;
+}
+
+const demo = [{name: 'Mike', userId: '01'}, {name: 'Todd', userId: '02'}];
+
+const userDict = listToDict(demo, (item) => item.userId);
+userDict.a.b.c.d; // Property 'b' does not exist on type '{ name: string; userId: string; }'
+```
+[Playground Link](https://www.typescriptlang.org/play?#code/GYVwdgxgLglg9mABAGxgZygFTgERtAHkwD4AKVDALkUwG0BdAGkRgBMBzAUzGtJik4BbapgCUiALzFEGAE4ww7UdQDetANacAntTkL29EQF9EKgFCJLiCAgyJW+KKo3bdUeYsM0TE00YDcZhZWFFAAdMBwsgCiAIYQABZ8AoKS0uZWmda2UIiaWpIsHNzJQqKBWVYO0C5a9IX8QhVWRuVBmbKcUCCySNVQgUZBNmB2rEJwhbQqYLGCnNQA5ACyMJqLzCBonLIAkqxLAAwAjItGzDNzC4iL2KysG4hbO-tHAExn9IFmI3bPsnhoIVQthAVBSONBHBmKVBOIpCwUmF-vs2v8wWFYmEAEZhCBhVj+RAAemJiAACrI4AAHHZQAqLbGLexwThoRBgOC5TgAD3QuQQiHptJuKg5VzcHnYRJRBxk7n0RKMiyAA)
+
+此時 typescript 就會報錯。
 
 ## Top Types
 
