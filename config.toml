@@ -19,7 +19,7 @@ quality = 99
 
 [params]
 description = "陳昇泰<br>一名前端工程師，討厭加班。"
-homeMetaContent = "created by hugo, blog project.你好，我是昇泰，一名網頁開發工程師。"
+homeMetaContent = "created by hugo, blog project.你好，我是昇泰，一名前端工程師。"
 footer = ""
 dateFormat = "Jan 2, 2006"
 codePenUser = "someUser"
@@ -30,7 +30,7 @@ showThemeSwitcher = true
 moveFooterToHeader = false
 logoAlt = "An alternative text description of the logo"
 customCss = [ 'css/custom.css' ]
-customJs = [ 'https://cdn.jsdelivr.net/npm/pangu@4.0.7/dist/browser/pangu.min.js', 'js/custom.js' ]
+customJs = [ 'https://cdn.jsdelivr.net/npm/pangu@4.0.7/dist/browser/pangu.min.js', 'js/medium-zoom.min.js', 'js/custom.js' ]
 stackblitzUser= "tp6gw94"
 codeSandbox="tp6gw94"
 

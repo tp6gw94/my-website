@@ -9,3 +9,7 @@ document.onreadystatechange = () => {
     });
   }
 };
+
+window.onload = () => {
+  mediumZoom('img');
+};

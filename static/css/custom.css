@@ -14,3 +14,8 @@ div.code-toolbar > .toolbar {
 div.code-toolbar > .toolbar a, div.code-toolbar > .toolbar button, div.code-toolbar > .toolbar span {
   box-shadow: none;
 }
+
+.code-toolbar pre code {
+  font-size: 0.8rem;
+}
+
