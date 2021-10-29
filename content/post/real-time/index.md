@@ -199,7 +199,7 @@ server.on("stream", (stream, headers) => {
       "content-type": "text/plant; charset=utf8-8"
     });
 
-    // 講已經建立連線的 stream 儲存起來
+    // 將已經建立連線的 stream 儲存起來
     connections.push(stream);
 
     stream.write(JSON.stringify({
@@ -395,7 +395,7 @@ function parseMessage (buffer) {
 }
 ```
 
-在後端將訊息 pase 後傳送給前端
+在後端將訊息 parse 後傳送給前端
 
 ```javascript
 server.on('upgrade', (req, socket) => {
@@ -425,7 +425,7 @@ async function postNewMsg(user, text) {
 }
 ```
 
-後端 pase 後，就可以正常讀取資料
+後端 parse 後，就可以正常讀取資料
 
 ```javascript
 const connections = [];
