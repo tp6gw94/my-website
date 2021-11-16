@@ -2,6 +2,7 @@
 title: "React Hook"
 date: 2021-05-23T12:18:52+08:00
 toc: true
+tags: ['react']
 ---
 
 ## useState
