@@ -24,7 +24,7 @@ date: 2021-05-22T22:18:25+08:00
     - UMC 2020 提案改善計畫南科第三
     - 降低產品 issue 70%
     - 建立內部自動化系統
-- 慶奇科技 ( 2021.04 -  )
+- 慶奇科技 ( 2021.04 -  2021.11)
     - 前端工程師
     - 內部 Code Review
     - 導入 Cypress & Storybook
@@ -33,6 +33,7 @@ date: 2021-05-22T22:18:25+08:00
 
 - HTML, CSS, JavaScript
 - GraphQL
+- TypeScript
 - React, Redux
 - Vue, Vuex
 - git

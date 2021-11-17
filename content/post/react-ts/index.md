@@ -1,7 +1,6 @@
 ---
-title: "React + TypeScript Usage Guide"
+title: "React + TypeScript Tips"
 date: 2021-11-08T19:09:26+08:00
-draft: true
 tags: ["TypeScript", "React"]
 ---
 
@@ -141,10 +140,212 @@ function withPosts<T>(Component: React.ComponentType<T>) {
 
 ## Limiting Props
 
-建立一個 `Button` 的 Component
+建立一個 `Button` 的 Component，其中一種透過 string 的方式更改 variant
 
 ```tsx
-export const Button = () => {
-    return <button></button>
+type ButtonProps = {
+    variant?: "primary" | "secondary" | "success";
+    outline?: boolean;
+    text: string;
+};
+
+const Button: React.FC<ButtonProps> = ({
+   text,
+   variant = "primary",
+   outline = false
+}) => {
+    const btnClass = `${variant} ${outline ? "outline" : ""}`;
+    return <button className={btnClass}>{text}</button>;
+};
+
+export default function App() {
+    return (
+        <div className="App">
+            <Button text={"this is primary button"} />
+            <Button text={"this is secondary button"} variant="secondary" />
+            <Button text={"this is success button"} variant="success" />
+            <Button text={"this is outline button"} outline />
+        </div>
+    );
 }
 ```
+
+另外一種是直接透過傳遞 props 會預設爲 true 的方式`<Button primary />` 直接給與名稱(React 在傳遞 props 時若未賦值預設是`true`)，不過若 props 未限定當有 primary 時，secondary 和 success 是不能同時出現的話，就會變成有可能發生 `<Button primary success />`而不會報錯。
+
+```tsx
+type ButtonProps = {
+  text?: string;
+  success?: boolean;
+  secondary?: boolean;
+  primary?: boolean;
+  outline?: boolean;
+};
+
+const Button: React.FC<ButtonProps> = ({
+  text,
+  success,
+  secondary,
+  primary,
+  outline
+}) => {
+  const btnClassObj: Record<
+    keyof Omit<ButtonProps, "text">,
+    boolean | undefined
+  > = {
+    success: success,
+    secondary: secondary,
+    primary: primary,
+    outline: outline
+  };
+  const btnClass = (Object.keys(btnClassObj) as Array<keyof typeof btnClassObj>)
+    .filter((className) => btnClassObj[className])
+    .join(" ");
+  return <button className={btnClass}>{text}</button>;
+};
+
+export default function App() {
+  return (
+    <div className="App">
+      <Button text={"this is primary button"} primary />
+      <Button text={"this is secondary button"} secondary />
+      <Button text={"this is success button"} success />
+      <Button text={"this is outline button"} outline />
+    </div>
+  );
+}
+```
+
+要讓 ts 報錯的話，只需要修改 props 就可以了
+
+```tsx
+type ButtonProps = {
+  text?: string;
+  outline?: boolean;
+};
+
+type PrimaryButton = ButtonProps & {
+  primary?: boolean;
+  secondary?: never;
+  success?: never;
+};
+
+type SecondaryButton = ButtonProps & {
+  secondary?: boolean;
+  primary?: never;
+  success?: never;
+};
+
+type SuccessButton = ButtonProps & {
+  success?: boolean;
+  primary?: never;
+  secondary?: never;
+};
+
+const Button: React.FC<PrimaryButton | SecondaryButton | SuccessButton> = ({
+  text,
+  outline = false,
+  primary = false,
+  secondary = false,
+  success = false
+}) => {
+  const btnClassObj: Record<
+    keyof Omit<PrimaryButton | SecondaryButton | SuccessButton, "text">,
+    boolean | undefined
+  > = {
+    success,
+    secondary,
+    primary,
+    outline
+  };
+  const btnClass = (Object.keys(btnClassObj) as Array<keyof typeof btnClassObj>)
+    .filter((className) => btnClassObj[className])
+    .join(" ");
+  return <button className={btnClass}>{text}</button>;
+};
+
+export default function App() {
+  return (
+    <div className="App">
+      <Button text={"this is primary button"} primary />
+      <Button text={"this is secondary button"} secondary />
+      <Button text={"this is success button"} success />
+      <Button text={"this is outline button"} outline />
+    </div>
+  );
+}
+```
+
+此時使用 `Button` 時，同時傳遞 `primary`、`secondary` TS 就會報錯。
+
+[sandbox](https://codesandbox.io/s/funny-cerf-jpynx?file=/src/App.tsx)
+
+## Polymorphic Component
+
+前端時常會發生設計稿的元素樣式或是行爲與原本的元素並不相同，例如像是 `button` 的 `a`，透過 Polymorphic Component 動態的產生 html 的元素。
+
+使用 TypeScript 的泛型也能達成動態的 tag 目的。
+```tsx
+type BaseButtonProps<E extends React.ElementType = React.ElementType> = {
+  text?: string;
+  outline?: boolean;
+  as?: E;
+};
+// overwrite props
+type ButtonProps<E extends React.ElementType> = BaseButtonProps<E> &
+  Omit<React.ComponentProps<E>, keyof BaseButtonProps>;
+
+type PrimaryButton<E extends React.ElementType> = ButtonProps<E> & {
+  primary?: boolean;
+  secondary?: never;
+  success?: never;
+};
+
+type SecondaryButton<E extends React.ElementType> = ButtonProps<E> & {
+  secondary?: boolean;
+  primary?: never;
+  success?: never;
+};
+
+type SuccessButton<E extends React.ElementType> = ButtonProps<E> & {
+  success?: boolean;
+  primary?: never;
+  secondary?: never;
+};
+const defaultElem = "button"
+function Button<E extends React.ElementType = typeof defaultElem>({
+  text,
+  as,
+  outline = false,
+  primary = false,
+  secondary = false,
+  success = false, 
+  ...rest
+}: PrimaryButton<E> | SecondaryButton<E> | SuccessButton<E>) {
+
+  const btnClassObj: Record<
+    "success" | "secondary" | "primary" | "outline",
+    boolean | undefined
+  > = {
+    success,
+    secondary,
+    primary,
+    outline
+  };
+  const btnClass = (Object.keys(btnClassObj) as Array<keyof typeof btnClassObj>)
+    .filter((className) => btnClassObj[className])
+    .join(" ");
+  const TagName = as || defaultElem;
+  return <TagName {...rest} className={btnClass}>{text}</TagName>;
+}
+
+export default function App() {
+  return (
+    <div className="App">
+      <Button text={"this is primary button"} primary as="a" href="/" />
+    </div>
+  );
+}
+```
+這樣當要使用 `a` Element 時，就可以 `as="a"`，並且也能帶入 `a` 的屬性也不會報錯。HTML 的 DOM 元素也會隨著帶入不同的 tag 變換。
+
+[sandbox](https://codesandbox.io/s/keen-boyd-ncxfs?file=/src/App.tsx)
