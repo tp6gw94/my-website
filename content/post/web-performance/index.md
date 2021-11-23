@@ -2,6 +2,7 @@
 title: "Web Performance"
 date: 2021-11-17T16:28:00+08:00
 tags: ['Web', 'Performance']
+toc: true
 ---
 
 ## User psychology of waiting
